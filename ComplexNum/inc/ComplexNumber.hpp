@@ -11,7 +11,7 @@ struct ComplexNumber
     //ctors
     ComplexNumber(double R_, double Im_): R(R_), Im(Im_), exp(0){}
     explicit ComplexNumber(double R_): R(R_), Im(0), exp(0){}
-    ComplexNumber(const ComplexNumber& other): R(other.R), Im(other.Im), exp(0){}
+    ComplexNumber(const ComplexNumber& other): R(other.R), Im(other.Im), exp(other.exp){}
     ComplexNumber(): R(0.0), Im(0.0), exp(0){};
     
     
@@ -33,12 +33,6 @@ struct ComplexNumber
     ComplexNumber operator-(const ComplexNumber& rhv) const;
     ComplexNumber operator*(const ComplexNumber& rhv) const;
     ComplexNumber operator/(const ComplexNumber& rhv) const;
-    
-
-    //compares 
-    bool operator==(const ComplexNumber& rhv);
-    bool operator!=(const ComplexNumber& rhv);
-    
 
     //methods
     double abs() const;
@@ -70,3 +64,7 @@ ComplexNumber operator*(const ComplexNumber& lhv, double rhv);
 ComplexNumber operator/(double lhv, const ComplexNumber& rhv);
 
 ComplexNumber operator/(const ComplexNumber& lhv, double rhv);
+
+bool operator==(const ComplexNumber& lhv, const ComplexNumber& rhv);
+
+bool operator!=(const ComplexNumber& lhv, const ComplexNumber& rhv);

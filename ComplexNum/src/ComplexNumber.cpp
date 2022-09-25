@@ -85,7 +85,7 @@ ComplexNumber ComplexNumber::operator*(const ComplexNumber& rhv) const{
 bool doubleCmp(const double &lhv, const double &rhv) {
 	if (std::abs(lhv-rhv) < std::numeric_limits<double>::epsilon())
 		return true;
-	else return false;
+	return false;
 }
 
 ComplexNumber& ComplexNumber::operator=(const ComplexNumber& other) {
@@ -94,6 +94,7 @@ ComplexNumber& ComplexNumber::operator=(const ComplexNumber& other) {
     }
     this->Im = other.Im;
     this->R = other.R;
+    this->exp = other.exp;
     return *this;
 }
 
@@ -187,5 +188,6 @@ ComplexNumber powC(ComplexNumber num, int degree) {
         return num;
     } else if (degree % 2 == 0) {
         return powC(num, degree/2) * powC(num, degree/2);
-    } else return powC(num, degree/2) * powC(num, degree/2) * num;
+    }
+    return powC(num, degree/2) * powC(num, degree/2) * num;
 }
