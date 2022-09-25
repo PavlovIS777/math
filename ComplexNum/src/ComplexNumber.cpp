@@ -4,12 +4,44 @@
 #include <string>
 #include <limits>
 
-ComplexNumber operator+(const ComplexNumber& lhv, const ComplexNumber& rhv) {
-    return ComplexNumber(lhv.R+rhv.R, lhv.Im+rhv.Im);
+ComplexNumber ComplexNumber::operator+(const ComplexNumber& rhv) const{
+    return ComplexNumber(R+rhv.R, Im+rhv.Im);
 }
 
-ComplexNumber operator-(const ComplexNumber& lhv, const ComplexNumber& rhv) {
-    return lhv + -rhv;
+ComplexNumber operator+(double lhv, const ComplexNumber& rhv) {
+    return ComplexNumber(lhv+rhv.R, rhv.Im);
+}
+
+ComplexNumber operator+(const ComplexNumber& lhv, double rhv) {
+    return rhv + lhv;
+}
+
+ComplexNumber ComplexNumber::operator-(const ComplexNumber& rhv) const{
+    return *this + -rhv;
+}
+
+ComplexNumber operator-(double lhv, const ComplexNumber& rhv) {
+    return ComplexNumber(lhv) - rhv;
+}
+
+ComplexNumber operator-(const ComplexNumber& lhv, double rhv) {
+    return lhv - ComplexNumber(rhv);
+}
+
+ComplexNumber operator*(double lhv, const ComplexNumber& rhv) {
+    return ComplexNumber(lhv) * rhv;
+}
+
+ComplexNumber operator*(const ComplexNumber& lhv, double rhv) {
+    return lhv * ComplexNumber(rhv);
+}
+
+ComplexNumber operator/(double lhv, const ComplexNumber& rhv) {
+    return ComplexNumber(lhv) / rhv;
+}
+
+ComplexNumber operator/(const ComplexNumber& lhv, double rhv) {
+    return lhv / ComplexNumber(rhv);
 }
 
 std::ostream& operator<<(std::ostream& out, const ComplexNumber& num) {
@@ -18,21 +50,24 @@ std::ostream& operator<<(std::ostream& out, const ComplexNumber& num) {
         double angle = std::acos(num.R/radius);
         out << radius << " * exp^(" << angle << "i)";
     } else {
-        if (doubleCmp(num.Im, 0))
+        if (doubleCmp(num.Im, 0)) {
             out << num.R;
-        else if (doubleCmp(num.R, 0))
-            if (doubleCmp(num.Im, 1))
+        }
+        else if (doubleCmp(num.R, 0)) {
+            if (doubleCmp(num.Im, 1)) {
                 out << "i";
-            else
+            } else {
                 out << num.Im << "i";
-        else {
+            }
+        } else {
             bool sign = std::signbit(num.Im);
             double Im_ = sign? -1*num.Im : num.Im;
             std::string signStr = sign? "-" : "+";
-            if (doubleCmp(num.Im, 1))
+            if (doubleCmp(num.Im, 1)) {
                 out << num.R <<" " << signStr << " "<<"i";
-            else
+            } else {
                 out << num.R <<" " << signStr << " " << Im_<<"i";
+            }
         }
     }
     return out;
@@ -43,8 +78,8 @@ std::istream& operator>>(std::istream& in, ComplexNumber& num) {
     return in;
 }
 
-ComplexNumber operator*(const ComplexNumber& lhv, const ComplexNumber& rhv) {
-    return ComplexNumber(lhv.R * rhv.R - lhv.Im * rhv.Im, lhv.R * rhv.Im + lhv.Im * rhv.R);
+ComplexNumber ComplexNumber::operator*(const ComplexNumber& rhv) const{
+    return ComplexNumber(R * rhv.R - Im * rhv.Im, R * rhv.Im + Im * rhv.R);
 }
 
 bool doubleCmp(const double &lhv, const double &rhv) {
@@ -70,11 +105,11 @@ ComplexNumber ComplexNumber::operator!() const {
     return ComplexNumber(R, -Im);
 }
 
-ComplexNumber operator/(const ComplexNumber& lhv, const ComplexNumber& rhv) {
+ComplexNumber ComplexNumber::operator/(const ComplexNumber& rhv) const {
     double denominator = rhv.Im * rhv.Im + rhv.R * rhv.R;
     if (doubleCmp(denominator, 0))
         return ComplexNumber(INFINITY, INFINITY);
-    return ComplexNumber((lhv.R*rhv.R+lhv.Im*rhv.Im)/denominator, (rhv.R*lhv.Im-lhv.R*rhv.Im)/denominator); 
+    return ComplexNumber((R*rhv.R+Im*rhv.Im)/denominator, (rhv.R*Im-R*rhv.Im)/denominator); 
 }
 
 ComplexNumber ComplexNumber::operator+() const {
@@ -113,6 +148,26 @@ ComplexNumber& ComplexNumber::operator/=(const ComplexNumber& other) {
     return *this;
 }
 
+ComplexNumber& ComplexNumber::operator/=(double other) {
+    *this = *this / ComplexNumber(other);
+    return *this;
+}
+
+ComplexNumber& ComplexNumber::operator*=(double other) {
+    *this = *this * ComplexNumber(other);
+    return *this;
+}
+
+ComplexNumber& ComplexNumber::operator-=(double other) {
+    *this = *this - ComplexNumber(other);
+    return *this;
+}
+
+ComplexNumber& ComplexNumber::operator+=(double other) {
+    *this = *this + ComplexNumber(other);
+    return *this;
+}
+
 ComplexNumber ComplexNumber::conj() const {
     return !(*this);
 }
@@ -126,11 +181,11 @@ void ComplexNumber::setexp(bool val) {
 }
 
 ComplexNumber powC(ComplexNumber num, int degree) {
-    if (degree == 0)
+    if (degree == 0) {
         return ComplexNumber(1);
-    else if (degree == 1)
+    } else if (degree == 1) {
         return num;
-    else if (degree % 2 == 0)
+    } else if (degree % 2 == 0) {
         return powC(num, degree/2) * powC(num, degree/2);
-    else return powC(num, degree/2) * powC(num, degree/2) * num;
+    } else return powC(num, degree/2) * powC(num, degree/2) * num;
 }
